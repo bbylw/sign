@@ -5,8 +5,6 @@ class App {
   constructor() {
     this.signatureTool = null;
     this.initializeUI();
-    this.initializeSignatureTool();
-    this.bindEvents();
   }
 
   initializeUI() {
@@ -47,8 +45,10 @@ class App {
       </div>
     `;
 
-    this.initializeSignatureTool();
-    this.bindEvents();
+    setTimeout(() => {
+      this.initializeSignatureTool();
+      this.bindEvents();
+    }, 0);
 
     // 添加提示信息
     const tips = document.createElement('div');
@@ -110,6 +110,11 @@ class App {
           throw new Error('文件大小不能超过10MB');
         }
         console.log('开始处理文件');
+        
+        if (!file.type.startsWith('image/') && file.type !== 'application/pdf') {
+          throw new Error('不支持的文件类型，请上传图片或PDF文件');
+        }
+        
         await this.signatureTool.loadDocument(file);
         console.log('文件处理完成');
       } catch (error) {
@@ -119,7 +124,13 @@ class App {
         loading.remove();
       }
     } else {
-      console.error('SignatureTool未初始化或未选择文件');
+      if (!this.signatureTool) {
+        console.error('SignatureTool未初始化');
+        alert('系统初始化失败，请刷新页面重试');
+      } else if (!file) {
+        console.error('未选择文件');
+        alert('请选择要上传的文件');
+      }
     }
   }
 
@@ -156,5 +167,5 @@ class App {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  new App();
+  window.app = new App();
 }); 
