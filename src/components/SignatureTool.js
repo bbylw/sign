@@ -203,15 +203,15 @@ export class SignatureTool {
           const fontFamily = document.getElementById('fontFamily').value;
           const fontSize = parseInt(document.getElementById('fontSize').value);
           
+          // 创建文字对象
           const text = new fabric.Text(signatureText, {
             left: finalCanvas.width - 300,
             top: finalCanvas.height - 100,
             fontFamily: fontFamily,
             fontSize: fontSize,
             fill: document.getElementById('textColor').value,
-            angle: -8,  // 更自然的倾斜角度
-            charSpacing: 80,  // 字符间距
-            strokeWidth: 1,
+            charSpacing: 80,
+            strokeWidth: 0.5,
             stroke: document.getElementById('textColor').value,
             shadow: new fabric.Shadow({
               color: 'rgba(0,0,0,0.2)',
@@ -220,26 +220,54 @@ export class SignatureTool {
               offsetY: 2
             })
           });
-          
+
           // 根据字体类型应用不同的样式
-          if (fontFamily.includes('Dancing Script')) {
-            text.set({
-              angle: -10,
-              charSpacing: 100
-            });
-          } else if (fontFamily.includes('Caveat')) {
-            text.set({
-              angle: -5,
-              charSpacing: 60
-            });
-          } else if (fontFamily.includes('Permanent Marker')) {
-            text.set({
-              angle: -3,
-              charSpacing: 120,
-              strokeWidth: 2
-            });
+          switch (fontFamily) {
+            case 'Dancing Script':
+              text.set({
+                angle: -8,
+                charSpacing: 100,
+                skewX: -5
+              });
+              break;
+            case 'Caveat':
+              text.set({
+                angle: -3,
+                charSpacing: 60,
+                skewX: -8
+              });
+              break;
+            case 'Pacifico':
+              text.set({
+                angle: -4,
+                charSpacing: 90,
+                skewX: -3
+              });
+              break;
+            case 'Permanent Marker':
+              text.set({
+                angle: -2,
+                charSpacing: 120,
+                strokeWidth: 1,
+                skewX: -2
+              });
+              break;
+            default:
+              // 中文字体
+              text.set({
+                angle: -5,
+                charSpacing: 40,
+                skewX: -5
+              });
           }
-          
+
+          // 添加随机变化使签名更自然
+          text.set({
+            angle: text.angle + (Math.random() * 2 - 1),  // 随机角度微调
+            skewX: text.skewX + (Math.random() * 2 - 1),  // 随机倾斜微调
+            charSpacing: text.charSpacing + (Math.random() * 10 - 5)  // 随机间距微调
+          });
+
           finalCanvas.add(text);
           const dataUrl = finalCanvas.toDataURL({format: 'png'});
           resolve(dataUrl);
