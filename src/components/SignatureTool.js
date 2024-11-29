@@ -1,9 +1,9 @@
 import { fabric } from 'fabric';
 import * as pdfjsLib from 'pdfjs-dist';
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 
-// 修改 worker 加载方式
-const pdfjsWorkerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorkerSrc;
+// 直接使用导入的 worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 export class SignatureTool {
   constructor(canvasId) {
