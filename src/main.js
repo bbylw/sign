@@ -80,7 +80,12 @@ class App {
           </div>
         </div>
         <div class="preview-section">
-          <div id="previewContainer"></div>
+          <div id="previewContainer" class="preview-container">
+            <!-- 文档预览将在这里显示 -->
+          </div>
+          <div id="signaturePreview" class="signature-preview" draggable="true">
+            <!-- 签名预览将在这里显示 -->
+          </div>
         </div>
         <button id="generateSignature" class="btn primary">生成签名文档</button>
       </div>
@@ -181,6 +186,20 @@ class App {
     fontSize.addEventListener('input', updateTextPreview);
     fontFamily.addEventListener('change', updateTextPreview);
     textColor.addEventListener('input', updateTextPreview);
+
+    // 更新签名预览
+    const updatePreview = () => {
+      if (this.signatureTool) {
+        this.signatureTool.updateSignaturePreview();
+      }
+    };
+
+    // 手写签名更新
+    this.canvas.on('path:created', updatePreview);
+    clearButton.addEventListener('click', () => {
+      this.clear();
+      updatePreview();
+    });
   }
 
   async handleDocumentUpload(event) {
