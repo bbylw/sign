@@ -6,6 +6,11 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.j
 
 export class SignatureTool {
   constructor(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) {
+      throw new Error('Canvas element not found');
+    }
+    
     this.canvas = new fabric.Canvas(canvasId);
     this.history = [];
     this.setupCanvas();

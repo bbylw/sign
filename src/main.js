@@ -3,8 +3,10 @@ import './style.css';
 
 class App {
   constructor() {
-    this.initializeUI();
     this.signatureTool = null;
+    this.initializeUI();
+    this.initializeSignatureTool();
+    this.bindEvents();
   }
 
   initializeUI() {
@@ -69,7 +71,12 @@ class App {
   }
 
   initializeSignatureTool() {
-    this.signatureTool = new SignatureTool('signatureCanvas');
+    const canvas = document.getElementById('signatureCanvas');
+    if (canvas) {
+      this.signatureTool = new SignatureTool('signatureCanvas');
+    } else {
+      console.error('Canvas element not found');
+    }
   }
 
   bindEvents() {
@@ -90,7 +97,7 @@ class App {
 
   async handleDocumentUpload(event) {
     const file = event.target.files[0];
-    if (file) {
+    if (file && this.signatureTool) {
       const loading = document.createElement('div');
       loading.className = 'loading';
       loading.textContent = '正在加载文档...';
@@ -107,6 +114,8 @@ class App {
       } finally {
         loading.remove();
       }
+    } else {
+      console.error('SignatureTool not initialized or no file selected');
     }
   }
 
@@ -142,4 +151,6 @@ class App {
   }
 }
 
-new App(); 
+document.addEventListener('DOMContentLoaded', () => {
+  new App();
+}); 
