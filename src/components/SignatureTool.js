@@ -188,6 +188,7 @@ export class SignatureTool {
     let startX, startY;
 
     preview.addEventListener('mousedown', (e) => {
+      e.preventDefault();
       isDragging = true;
       preview.classList.add('dragging');
       const rect = preview.getBoundingClientRect();
@@ -219,13 +220,31 @@ export class SignatureTool {
     });
 
     document.addEventListener('mouseup', () => {
-      isDragging = false;
-      preview.classList.remove('dragging');
+      if (isDragging) {
+        isDragging = false;
+        preview.classList.remove('dragging');
+      }
     });
   }
 
   updateSignaturePreview() {
     const preview = document.getElementById('signaturePreview');
+    const container = document.getElementById('previewContainer');
+    
+    if (!container || !preview) return;
+    
+    // 设置初始位置（如果还没有设置）
+    if (!preview.style.left) {
+      const containerRect = container.getBoundingClientRect();
+      preview.style.left = `${containerRect.width - 200}px`;
+      preview.style.top = `${containerRect.height - 100}px`;
+      
+      this.signaturePosition = {
+        x: 80,  // 默认在右下角
+        y: 80
+      };
+    }
+
     if (this.signatureMode === 'text') {
       const text = document.getElementById('signatureText').value || '预览签名';
       preview.textContent = text;

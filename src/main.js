@@ -182,22 +182,41 @@ class App {
       textPreview.style.display = 'flex';
     };
 
-    signatureText.addEventListener('input', updateTextPreview);
-    fontSize.addEventListener('input', updateTextPreview);
-    fontFamily.addEventListener('change', updateTextPreview);
-    textColor.addEventListener('input', updateTextPreview);
-
-    // 更新签名预览
+    // 添加签名预览更新
     const updatePreview = () => {
       if (this.signatureTool) {
         this.signatureTool.updateSignaturePreview();
       }
     };
 
+    // 文字签名更新
+    signatureText.addEventListener('input', () => {
+      updateTextPreview();
+      updatePreview();
+    });
+    fontSize.addEventListener('input', () => {
+      updateTextPreview();
+      updatePreview();
+    });
+    fontFamily.addEventListener('change', () => {
+      updateTextPreview();
+      updatePreview();
+    });
+    textColor.addEventListener('input', () => {
+      updateTextPreview();
+      updatePreview();
+    });
+
     // 手写签名更新
-    this.canvas.on('path:created', updatePreview);
+    this.signatureTool.canvas.on('path:created', updatePreview);
     clearButton.addEventListener('click', () => {
-      this.clear();
+      this.signatureTool.clear();
+      updatePreview();
+    });
+
+    // 文档上传后更新预览
+    documentInput.addEventListener('change', async (event) => {
+      await this.handleDocumentUpload(event);
       updatePreview();
     });
   }

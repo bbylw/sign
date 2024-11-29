@@ -301,6 +301,8 @@ input[type="file"] {
 
 .preview-container {
   position: relative;
+  min-height: 200px;
+  width: 100%;
   overflow: hidden;
 }
 
@@ -309,12 +311,20 @@ input[type="file"] {
   cursor: move;
   user-select: none;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px dashed #666;
+  background: rgba(255, 255, 255, 0.5);
+  border: 2px dashed #666;
   padding: 10px;
-  display: none;  /* 初始隐藏 */
+  display: none;
+  min-width: 100px;
+  min-height: 50px;
 }
 
 .signature-preview.dragging {
   opacity: 0.7;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.signature-preview img {
+  max-width: 200px;
+  pointer-events: none;
 }
