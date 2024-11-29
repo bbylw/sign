@@ -16,7 +16,9 @@ export class SignatureTool {
     this.setupCanvas();
     this.bindEvents();
     
-    // 添加窗口大小变化的响应
+    // 添加签名模式属性
+    this.signatureMode = 'handwrite';
+    
     window.addEventListener('resize', this.handleResize.bind(this));
   }
 
@@ -184,38 +186,54 @@ export class SignatureTool {
     }
 
     return new Promise((resolve, reject) => {
-      const finalCanvas = new fabric.Canvas(null);
-      finalCanvas.setWidth(this.documentImage.width);
-      finalCanvas.setHeight(this.documentImage.height);
-      
-      finalCanvas.add(this.documentImage);
-      
-      if (this.signatureMode === 'text') {
-        // 文字签名
-        const text = new fabric.Text(document.getElementById('signatureText').value, {
-          left: finalCanvas.width - 200,
-          top: finalCanvas.height - 100,
-          fontFamily: document.getElementById('fontFamily').value,
-          fontSize: parseInt(document.getElementById('fontSize').value),
-          fill: document.getElementById('textColor').value
-        });
-        finalCanvas.add(text);
-        const dataUrl = finalCanvas.toDataURL({format: 'png'});
-        resolve(dataUrl);
-      } else {
-        // 手写签名
-        const signatureData = this.canvas.toDataURL();
-        fabric.Image.fromURL(signatureData, (signature) => {
-          signature.scale(0.5);
-          signature.set({
-            left: finalCanvas.width - signature.width * 0.5 - 50,
-            top: finalCanvas.height - signature.height * 0.5 - 50
+      try {
+        const finalCanvas = new fabric.Canvas(null);
+        finalCanvas.setWidth(this.documentImage.width);
+        finalCanvas.setHeight(this.documentImage.height);
+        
+        finalCanvas.add(this.documentImage);
+        
+        if (this.signatureMode === 'text') {
+          // 文字签名
+          const signatureText = document.getElementById('signatureText').value;
+          if (!signatureText) {
+            throw new Error('请输入签名文字');
+          }
+
+          const text = new fabric.Text(signatureText, {
+            left: finalCanvas.width - 300,
+            top: finalCanvas.height - 100,
+            fontFamily: document.getElementById('fontFamily').value,
+            fontSize: parseInt(document.getElementById('fontSize').value),
+            fill: document.getElementById('textColor').value,
+            angle: -10  // 稍微倾斜以增加手写感
           });
-          finalCanvas.add(signature);
+          
+          finalCanvas.add(text);
           const dataUrl = finalCanvas.toDataURL({format: 'png'});
           resolve(dataUrl);
-        });
+        } else {
+          // 手写签名
+          const signatureData = this.canvas.toDataURL();
+          fabric.Image.fromURL(signatureData, (signature) => {
+            signature.scale(0.5);
+            signature.set({
+              left: finalCanvas.width - signature.width * 0.5 - 50,
+              top: finalCanvas.height - signature.height * 0.5 - 50
+            });
+            finalCanvas.add(signature);
+            const dataUrl = finalCanvas.toDataURL({format: 'png'});
+            resolve(dataUrl);
+          });
+        }
+      } catch (error) {
+        reject(error);
       }
     });
+  }
+
+  // 添加设置签名模式的方法
+  setSignatureMode(mode) {
+    this.signatureMode = mode;
   }
 } 

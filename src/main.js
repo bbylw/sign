@@ -139,7 +139,7 @@ class App {
       textMode.classList.remove('active');
       handwriteArea.style.display = 'block';
       textArea.style.display = 'none';
-      this.signatureMode = 'handwrite';
+      this.signatureTool.setSignatureMode('handwrite');
     });
 
     textMode.addEventListener('click', () => {
@@ -147,7 +147,7 @@ class App {
       handwriteMode.classList.remove('active');
       textArea.style.display = 'block';
       handwriteArea.style.display = 'none';
-      this.signatureMode = 'text';
+      this.signatureTool.setSignatureMode('text');
     });
 
     // 文字签名预览
