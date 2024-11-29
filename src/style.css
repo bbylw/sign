@@ -3,6 +3,10 @@
   --secondary-color: #f5f5f5;
   --border-color: #ddd;
   --text-color: #333;
+  --font-handwrite: 'Homemade Apple', cursive;
+  --font-chinese: 'Ma Shan Zheng', cursive;
+  --font-casual: 'Shadows Into Light', cursive;
+  --font-scribble: 'Gloria Hallelujah', cursive;
 }
 
 * {
@@ -157,7 +161,7 @@ input[type="file"] {
   to { transform: rotate(360deg); }
 }
 
-/* 响应式设计 */
+/* 响应��设计 */
 @media (max-width: 768px) {
   .container {
     padding: 1rem;
@@ -256,6 +260,7 @@ input[type="file"] {
   margin-top: 1rem;
   transform: rotate(-5deg);  /* 默认倾斜 */
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);  /* 添加轻微阴影 */
+  font-family: var(--current-font), cursive;  /* 添加回退字体 */
 }
 
 .font-select {
@@ -265,13 +270,16 @@ input[type="file"] {
   background: white;
 }
 
-/* 更新字体导入 */
-@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Liu+Jian+Mao+Cao&family=Zhi+Mang+Xing&family=Homemade+Apple&family=Caveat:wght@400;700&family=Shadows+Into+Light&family=Kalam:wght@400;700&family=Indie+Flower&family=Satisfy&family=Gloria+Hallelujah&display=swap');
-
 /* 为不同字体添加特定样式 */
 .text-preview[style*="Homemade Apple"] {
+  font-family: 'Homemade Apple', cursive !important;
   transform: rotate(-4deg);
   letter-spacing: 2px;
+}
+
+.text-preview[style*="Liu Jian Mao Cao"] {
+  font-family: 'Liu Jian Mao Cao', cursive !important;
+  transform: rotate(-5deg);
 }
 
 .text-preview[style*="Shadows Into Light"] {
@@ -282,10 +290,6 @@ input[type="file"] {
 .text-preview[style*="Kalam"] {
   transform: rotate(-2deg);
   letter-spacing: 1px;
-}
-
-.text-preview[style*="Liu Jian Mao Cao"] {
-  transform: rotate(-5deg);
 }
 
 .text-preview[style*="Gloria Hallelujah"] {

@@ -165,10 +165,16 @@ class App {
     const textPreview = document.getElementById('textPreview');
 
     const updateTextPreview = () => {
-      textPreview.style.fontFamily = fontFamily.value;
+      const font = fontFamily.value;
+      textPreview.style.fontFamily = `${font}, cursive`;
       textPreview.style.fontSize = `${fontSize.value}px`;
       textPreview.style.color = textColor.value;
       textPreview.textContent = signatureText.value || '预览签名效果';
+      
+      // 强制重新应用字体
+      textPreview.style.display = 'none';
+      textPreview.offsetHeight; // 触发重排
+      textPreview.style.display = 'flex';
     };
 
     signatureText.addEventListener('input', updateTextPreview);

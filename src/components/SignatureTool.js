@@ -207,7 +207,7 @@ export class SignatureTool {
           const text = new fabric.Text(signatureText, {
             left: finalCanvas.width - 300,
             top: finalCanvas.height - 100,
-            fontFamily: fontFamily,
+            fontFamily: `${fontFamily}, cursive`,
             fontSize: fontSize,
             fill: document.getElementById('textColor').value,
             charSpacing: 60,
