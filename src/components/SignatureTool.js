@@ -1,8 +1,8 @@
 import { fabric } from 'fabric';
 import * as pdfjsLib from 'pdfjs-dist';
 
-// 设置 worker 路径
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`;
+// 使用固定版本
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
 
 export class SignatureTool {
   constructor(canvasId) {
