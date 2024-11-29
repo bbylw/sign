@@ -200,14 +200,45 @@ export class SignatureTool {
             throw new Error('请输入签名文字');
           }
 
+          const fontFamily = document.getElementById('fontFamily').value;
+          const fontSize = parseInt(document.getElementById('fontSize').value);
+          
           const text = new fabric.Text(signatureText, {
             left: finalCanvas.width - 300,
             top: finalCanvas.height - 100,
-            fontFamily: document.getElementById('fontFamily').value,
-            fontSize: parseInt(document.getElementById('fontSize').value),
+            fontFamily: fontFamily,
+            fontSize: fontSize,
             fill: document.getElementById('textColor').value,
-            angle: -10  // 稍微倾斜以增加手写感
+            angle: -8,  // 更自然的倾斜角度
+            charSpacing: 80,  // 字符间距
+            strokeWidth: 1,
+            stroke: document.getElementById('textColor').value,
+            shadow: new fabric.Shadow({
+              color: 'rgba(0,0,0,0.2)',
+              blur: 3,
+              offsetX: 2,
+              offsetY: 2
+            })
           });
+          
+          // 根据字体类型应用不同的样式
+          if (fontFamily.includes('Dancing Script')) {
+            text.set({
+              angle: -10,
+              charSpacing: 100
+            });
+          } else if (fontFamily.includes('Caveat')) {
+            text.set({
+              angle: -5,
+              charSpacing: 60
+            });
+          } else if (fontFamily.includes('Permanent Marker')) {
+            text.set({
+              angle: -3,
+              charSpacing: 120,
+              strokeWidth: 2
+            });
+          }
           
           finalCanvas.add(text);
           const dataUrl = finalCanvas.toDataURL({format: 'png'});
