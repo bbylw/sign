@@ -210,62 +210,88 @@ export class SignatureTool {
             fontFamily: fontFamily,
             fontSize: fontSize,
             fill: document.getElementById('textColor').value,
-            charSpacing: 80,
-            strokeWidth: 0.5,
+            charSpacing: 60,
+            strokeWidth: 0.3,
             stroke: document.getElementById('textColor').value,
             shadow: new fabric.Shadow({
-              color: 'rgba(0,0,0,0.2)',
-              blur: 3,
-              offsetX: 2,
-              offsetY: 2
+              color: 'rgba(0,0,0,0.15)',
+              blur: 2,
+              offsetX: 1,
+              offsetY: 1
             })
           });
 
           // 根据字体类型应用不同的样式
           switch (fontFamily) {
-            case 'Dancing Script':
-              text.set({
-                angle: -8,
-                charSpacing: 100,
-                skewX: -5
-              });
-              break;
-            case 'Caveat':
-              text.set({
-                angle: -3,
-                charSpacing: 60,
-                skewX: -8
-              });
-              break;
-            case 'Pacifico':
+            case 'Homemade Apple':
               text.set({
                 angle: -4,
-                charSpacing: 90,
-                skewX: -3
+                charSpacing: 120,
+                skewX: -8,
+                strokeWidth: 0.2
               });
               break;
-            case 'Permanent Marker':
+            case 'Liu Jian Mao Cao':
+              text.set({
+                angle: -5,
+                charSpacing: 30,
+                skewX: -10,
+                strokeWidth: 0.4
+              });
+              break;
+            case 'Shadows Into Light':
+              text.set({
+                angle: -3,
+                charSpacing: 80,
+                skewX: -5,
+                strokeWidth: 0.3
+              });
+              break;
+            case 'Kalam':
               text.set({
                 angle: -2,
-                charSpacing: 120,
-                strokeWidth: 1,
-                skewX: -2
+                charSpacing: 70,
+                skewX: -4,
+                strokeWidth: 0.5
+              });
+              break;
+            case 'Gloria Hallelujah':
+              text.set({
+                angle: -1,
+                charSpacing: 90,
+                skewX: -3,
+                strokeWidth: 0.4
+              });
+              break;
+            case 'Satisfy':
+              text.set({
+                angle: -6,
+                charSpacing: 100,
+                skewX: -7,
+                strokeWidth: 0.2
               });
               break;
             default:
-              // 中文字体
               text.set({
-                angle: -5,
-                charSpacing: 40,
-                skewX: -5
+                angle: -4,
+                charSpacing: 50,
+                skewX: -6,
+                strokeWidth: 0.3
               });
           }
 
-          // 添加随机变化使签名更自然
+          // 添加更多随机变化
           text.set({
-            angle: text.angle + (Math.random() * 2 - 1),  // 随机角度微调
-            skewX: text.skewX + (Math.random() * 2 - 1),  // 随机倾斜微调
-            charSpacing: text.charSpacing + (Math.random() * 10 - 5)  // 随机间距微调
+            angle: text.angle + (Math.random() * 3 - 1.5),  // 更大的角度变化
+            skewX: text.skewX + (Math.random() * 4 - 2),    // 更大的倾斜变化
+            charSpacing: text.charSpacing + (Math.random() * 20 - 10),  // 更大的间距变化
+            top: text.top + (Math.random() * 10 - 5),  // 随机上下位置
+            left: text.left + (Math.random() * 10 - 5)  // 随机左右位置
+          });
+
+          // 添加笔画不均匀效果
+          text.set({
+            strokeWidth: text.strokeWidth * (0.8 + Math.random() * 0.4)  // 随机笔画粗细
           });
 
           finalCanvas.add(text);

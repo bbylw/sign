@@ -265,26 +265,30 @@ input[type="file"] {
   background: white;
 }
 
-/* 添加更多手写字体 */
-@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=Dancing+Script:wght@400;700&family=Caveat:wght@400;700&family=Pacifico&family=Permanent+Marker&display=swap');
+/* 更新字体导入 */
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Liu+Jian+Mao+Cao&family=Zhi+Mang+Xing&family=Homemade+Apple&family=Caveat:wght@400;700&family=Shadows+Into+Light&family=Kalam:wght@400;700&family=Indie+Flower&family=Satisfy&family=Gloria+Hallelujah&display=swap');
 
 /* 为不同字体添加特定样式 */
-.text-preview[style*="Dancing Script"] {
-  transform: rotate(-8deg);
-  letter-spacing: 1px;
-}
-
-.text-preview[style*="Caveat"] {
-  transform: rotate(-3deg);
-  letter-spacing: 0.5px;
-}
-
-.text-preview[style*="Pacifico"] {
+.text-preview[style*="Homemade Apple"] {
   transform: rotate(-4deg);
+  letter-spacing: 2px;
+}
+
+.text-preview[style*="Shadows Into Light"] {
+  transform: rotate(-3deg);
   letter-spacing: 1.5px;
 }
 
-.text-preview[style*="Permanent Marker"] {
+.text-preview[style*="Kalam"] {
   transform: rotate(-2deg);
+  letter-spacing: 1px;
+}
+
+.text-preview[style*="Liu Jian Mao Cao"] {
+  transform: rotate(-5deg);
+}
+
+.text-preview[style*="Gloria Hallelujah"] {
+  transform: rotate(-1deg);
   letter-spacing: 2px;
 }

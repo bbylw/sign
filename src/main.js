@@ -58,12 +58,16 @@ class App {
                 <label>
                   字体样式:
                   <select id="fontFamily" class="font-select">
-                    <option value="ZCOOL XiaoWei">中文手写体</option>
                     <option value="Ma Shan Zheng">毛笔字体</option>
-                    <option value="Dancing Script">英文手写体 1</option>
-                    <option value="Caveat">英文手写体 2</option>
-                    <option value="Pacifico">英文手写体 3</option>
-                    <option value="Permanent Marker">英文马克笔</option>
+                    <option value="Liu Jian Mao Cao">潦草字体</option>
+                    <option value="Zhi Mang Xing">行草字体</option>
+                    <option value="Homemade Apple">手写体 1</option>
+                    <option value="Caveat">手写体 2</option>
+                    <option value="Shadows Into Light">手写体 3</option>
+                    <option value="Kalam">潦草体 1</option>
+                    <option value="Indie Flower">潦草体 2</option>
+                    <option value="Satisfy">连笔体</option>
+                    <option value="Gloria Hallelujah">涂鸦体</option>
                   </select>
                 </label>
                 <label>
