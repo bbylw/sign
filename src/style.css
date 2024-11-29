@@ -48,6 +48,13 @@ h1, h2 {
   background-color: #357abd;
 }
 
+.upload-label::after {
+  content: '(支持图片和PDF，最大10MB)';
+  font-size: 0.8em;
+  margin-left: 0.5em;
+  opacity: 0.8;
+}
+
 input[type="file"] {
   display: none;
 }
@@ -56,6 +63,22 @@ input[type="file"] {
   border: 1px solid var(--border-color);
   margin-bottom: 1rem;
   background-color: white;
+}
+
+.canvas-container::before {
+  content: '在此处手写签名';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.canvas-container:empty::before {
+  opacity: 1;
 }
 
 .controls {
@@ -118,6 +141,22 @@ input[type="file"] {
   z-index: 1000;
 }
 
+.loading::after {
+  content: '';
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+  margin-left: 0.5em;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
   .container {
@@ -132,4 +171,40 @@ input[type="file"] {
     flex-direction: column;
     width: 100%;
   }
+
+  .brush-settings label {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  input[type="range"] {
+    width: 60%;
+  }
+
+  .preview-section {
+    margin: 1rem 0;
+  }
+}
+
+.tips {
+  background-color: var(--secondary-color);
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 2rem;
+}
+
+.tips h3 {
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.tips ol {
+  padding-left: 1.5rem;
+}
+
+.tips li {
+  margin-bottom: 0.5rem;
 } 

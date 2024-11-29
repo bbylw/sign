@@ -9,7 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "fabric": "^5.3.0"
+    "fabric": "^5.3.0",
+    "pdfjs-dist": "^4.0.269"
   },
   "devDependencies": {
     "vite": "^5.0.0"

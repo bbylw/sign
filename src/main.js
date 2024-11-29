@@ -1,4 +1,4 @@
-import { SignatureTool } from './components/SignatureTool';
+import { SignatureTool } from './components/SignatureTool.js';
 import './style.css';
 
 class App {
@@ -15,7 +15,7 @@ class App {
         <div class="upload-section">
           <label for="document" class="upload-label">
             <span>上传文档</span>
-            <input type="file" id="document" accept="image/*" />
+            <input type="file" id="document" accept="image/*,.pdf" />
           </label>
         </div>
         <div class="signature-section">
@@ -47,6 +47,25 @@ class App {
 
     this.initializeSignatureTool();
     this.bindEvents();
+
+    // 添加提示信息
+    const tips = document.createElement('div');
+    tips.className = 'tips';
+    tips.innerHTML = `
+      <h3>使用说明：</h3>
+      <ol>
+        <li>上传需要签名的文档（支持图片格式）</li>
+        <li>在签名区域手写您的签名</li>
+        <li>调整笔画粗细和颜色</li>
+        <li>如果不满意可以撤销或清除重写</li>
+        <li>点击"生成签名文档"完成</li>
+      </ol>
+    `;
+    
+    document.querySelector('.container').insertBefore(
+      tips,
+      document.querySelector('.upload-section')
+    );
   }
 
   initializeSignatureTool() {
@@ -72,7 +91,22 @@ class App {
   async handleDocumentUpload(event) {
     const file = event.target.files[0];
     if (file) {
-      await this.signatureTool.loadDocument(file);
+      const loading = document.createElement('div');
+      loading.className = 'loading';
+      loading.textContent = '正在加载文档...';
+      document.body.appendChild(loading);
+
+      try {
+        if (file.size > 10 * 1024 * 1024) {
+          throw new Error('文件大小不能超过10MB');
+        }
+        await this.signatureTool.loadDocument(file);
+      } catch (error) {
+        console.error('加载文档失败:', error);
+        alert(error.message || '加载文档失败，请重试');
+      } finally {
+        loading.remove();
+      }
     }
   }
 

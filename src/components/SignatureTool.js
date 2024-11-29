@@ -1,4 +1,8 @@
 import { fabric } from 'fabric';
+import * as pdfjsLib from 'pdfjs-dist';
+
+// 设置 PDF.js worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 export class SignatureTool {
   constructor(canvasId) {
@@ -6,6 +10,17 @@ export class SignatureTool {
     this.history = [];
     this.setupCanvas();
     this.bindEvents();
+    
+    // 添加窗口大小变化的响应
+    window.addEventListener('resize', this.handleResize.bind(this));
+  }
+
+  handleResize() {
+    const container = document.querySelector('.canvas-container');
+    const width = container.clientWidth;
+    this.canvas.setWidth(width);
+    this.canvas.setHeight(width * 0.5);
+    this.canvas.renderAll();
   }
 
   setupCanvas() {
@@ -46,12 +61,65 @@ export class SignatureTool {
     this.canvas.freeDrawingBrush.color = color;
   }
 
+  // 添加预览功能
   async loadDocument(file) {
+    if (file.type === 'application/pdf') {
+      return this.loadPDF(file);
+    } else {
+      return this.loadImage(file);
+    }
+  }
+
+  async loadPDF(file) {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+      const page = await pdf.getPage(1); // 获取第一页
+      
+      const scale = 1.5;
+      const viewport = page.getViewport({ scale });
+      
+      // 创建 canvas 用于渲染 PDF
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      
+      const context = canvas.getContext('2d');
+      await page.render({
+        canvasContext: context,
+        viewport: viewport
+      }).promise;
+      
+      // 显示预览
+      const previewContainer = document.getElementById('previewContainer');
+      previewContainer.innerHTML = '';
+      previewContainer.appendChild(canvas);
+      
+      // 保存文档信息
+      this.documentImage = new fabric.Image(canvas);
+      
+      return Promise.resolve();
+    } catch (error) {
+      console.error('PDF 加载失败:', error);
+      throw new Error('PDF 加载失败，请重试');
+    }
+  }
+
+  async loadImage(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (e) => {
         fabric.Image.fromURL(e.target.result, (img) => {
           this.documentImage = img;
+          
+          // 在预览区域显示文档
+          const previewContainer = document.getElementById('previewContainer');
+          const preview = document.createElement('img');
+          preview.src = e.target.result;
+          preview.style.maxWidth = '100%';
+          previewContainer.innerHTML = '';
+          previewContainer.appendChild(preview);
+          
           resolve();
         });
       };
