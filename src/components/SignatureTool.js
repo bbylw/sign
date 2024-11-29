@@ -1,7 +1,7 @@
 import { fabric } from 'fabric';
 import * as pdfjsLib from 'pdfjs-dist';
 
-// 使用固定版本
+// 使用相同版本的 worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
 
 export class SignatureTool {
