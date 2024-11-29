@@ -19,23 +19,57 @@ class App {
           </label>
         </div>
         <div class="signature-section">
-          <h2>手写签名</h2>
-          <div class="canvas-container">
-            <canvas id="signatureCanvas"></canvas>
+          <h2>签名</h2>
+          <div class="signature-type-switch">
+            <button id="handwriteMode" class="btn mode-btn active">手写签名</button>
+            <button id="textMode" class="btn mode-btn">文字签名</button>
           </div>
-          <div class="controls">
-            <button id="clearSignature" class="btn">清除签名</button>
-            <button id="undoSignature" class="btn">撤销</button>
-            <div class="brush-settings">
-              <label>
-                笔画粗细:
-                <input type="range" id="brushSize" min="1" max="10" value="2" />
-              </label>
-              <label>
-                颜色:
-                <input type="color" id="brushColor" value="#000000" />
-              </label>
+          
+          <!-- 手写签名区域 -->
+          <div id="handwriteArea" class="signature-area">
+            <div class="canvas-container">
+              <canvas id="signatureCanvas"></canvas>
             </div>
+            <div class="controls">
+              <button id="clearSignature" class="btn">清除签名</button>
+              <button id="undoSignature" class="btn">撤销</button>
+              <div class="brush-settings">
+                <label>
+                  笔画粗细:
+                  <input type="range" id="brushSize" min="1" max="10" value="2" />
+                </label>
+                <label>
+                  颜色:
+                  <input type="color" id="brushColor" value="#000000" />
+                </label>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 文字签名区域 -->
+          <div id="textArea" class="signature-area" style="display: none;">
+            <div class="text-input-container">
+              <input type="text" id="signatureText" placeholder="输入您的签名文字" class="signature-text-input" />
+              <div class="text-controls">
+                <label>
+                  字体大小:
+                  <input type="range" id="fontSize" min="20" max="80" value="40" />
+                </label>
+                <label>
+                  字体样式:
+                  <select id="fontFamily" class="font-select">
+                    <option value="ZCOOL XiaoWei">小魏手写体</option>
+                    <option value="Ma Shan Zheng">马善政手写体</option>
+                    <option value="Zhi Mang Xing">智慧体</option>
+                  </select>
+                </label>
+                <label>
+                  颜色:
+                  <input type="color" id="textColor" value="#000000" />
+                </label>
+              </div>
+            </div>
+            <div id="textPreview" class="text-preview"></div>
           </div>
         </div>
         <div class="preview-section">
@@ -93,6 +127,47 @@ class App {
     brushSize.addEventListener('input', (e) => this.signatureTool.setBrushSize(e.target.value));
     brushColor.addEventListener('input', (e) => this.signatureTool.setBrushColor(e.target.value));
     generateButton.addEventListener('click', this.handleGenerate.bind(this));
+
+    // 添加模式切换事件
+    const handwriteMode = document.getElementById('handwriteMode');
+    const textMode = document.getElementById('textMode');
+    const handwriteArea = document.getElementById('handwriteArea');
+    const textArea = document.getElementById('textArea');
+
+    handwriteMode.addEventListener('click', () => {
+      handwriteMode.classList.add('active');
+      textMode.classList.remove('active');
+      handwriteArea.style.display = 'block';
+      textArea.style.display = 'none';
+      this.signatureMode = 'handwrite';
+    });
+
+    textMode.addEventListener('click', () => {
+      textMode.classList.add('active');
+      handwriteMode.classList.remove('active');
+      textArea.style.display = 'block';
+      handwriteArea.style.display = 'none';
+      this.signatureMode = 'text';
+    });
+
+    // 文字签名预览
+    const signatureText = document.getElementById('signatureText');
+    const fontSize = document.getElementById('fontSize');
+    const fontFamily = document.getElementById('fontFamily');
+    const textColor = document.getElementById('textColor');
+    const textPreview = document.getElementById('textPreview');
+
+    const updateTextPreview = () => {
+      textPreview.style.fontFamily = fontFamily.value;
+      textPreview.style.fontSize = `${fontSize.value}px`;
+      textPreview.style.color = textColor.value;
+      textPreview.textContent = signatureText.value || '预览签名效果';
+    };
+
+    signatureText.addEventListener('input', updateTextPreview);
+    fontSize.addEventListener('input', updateTextPreview);
+    fontFamily.addEventListener('change', updateTextPreview);
+    textColor.addEventListener('input', updateTextPreview);
   }
 
   async handleDocumentUpload(event) {

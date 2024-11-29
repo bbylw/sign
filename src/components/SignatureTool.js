@@ -190,22 +190,32 @@ export class SignatureTool {
       
       finalCanvas.add(this.documentImage);
       
-      const signatureData = this.canvas.toDataURL();
-      fabric.Image.fromURL(signatureData, (signature) => {
-        signature.scale(0.5);
-        signature.set({
-          left: finalCanvas.width - signature.width * 0.5 - 50,
-          top: finalCanvas.height - signature.height * 0.5 - 50
+      if (this.signatureMode === 'text') {
+        // 文字签名
+        const text = new fabric.Text(document.getElementById('signatureText').value, {
+          left: finalCanvas.width - 200,
+          top: finalCanvas.height - 100,
+          fontFamily: document.getElementById('fontFamily').value,
+          fontSize: parseInt(document.getElementById('fontSize').value),
+          fill: document.getElementById('textColor').value
         });
-        finalCanvas.add(signature);
-        
-        try {
+        finalCanvas.add(text);
+        const dataUrl = finalCanvas.toDataURL({format: 'png'});
+        resolve(dataUrl);
+      } else {
+        // 手写签名
+        const signatureData = this.canvas.toDataURL();
+        fabric.Image.fromURL(signatureData, (signature) => {
+          signature.scale(0.5);
+          signature.set({
+            left: finalCanvas.width - signature.width * 0.5 - 50,
+            top: finalCanvas.height - signature.height * 0.5 - 50
+          });
+          finalCanvas.add(signature);
           const dataUrl = finalCanvas.toDataURL({format: 'png'});
           resolve(dataUrl);
-        } catch (error) {
-          reject(error);
-        }
-      });
+        });
+      }
     });
   }
 } 

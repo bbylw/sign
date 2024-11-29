@@ -207,4 +207,61 @@ input[type="file"] {
 
 .tips li {
   margin-bottom: 0.5rem;
-} 
+}
+
+.signature-type-switch {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 0.8rem;
+  border: 1px solid var(--border-color);
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.mode-btn.active {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.signature-text-input {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.2rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.text-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.text-preview {
+  min-height: 100px;
+  border: 1px dashed var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.font-select {
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: white;
+}
+
+/* 添加字体 */
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=Zhi+Mang+Xing&display=swap'); 
