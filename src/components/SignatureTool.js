@@ -1,8 +1,9 @@
 import { fabric } from 'fabric';
 import * as pdfjsLib from 'pdfjs-dist';
 
-// 设置 PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+// 修改 worker 加载方式
+const pdfjsWorkerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorkerSrc;
 
 export class SignatureTool {
   constructor(canvasId) {
@@ -78,8 +79,17 @@ export class SignatureTool {
   async loadPDF(file) {
     try {
       const arrayBuffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
-      const page = await pdf.getPage(1); // 获取第一页
+      
+      // 添加更多错误处理和日志
+      console.log('开始加载 PDF');
+      const loadingTask = pdfjsLib.getDocument({data: arrayBuffer});
+      console.log('PDF 加载任务创建成功');
+      
+      const pdf = await loadingTask.promise;
+      console.log('PDF 文档加载成功');
+      
+      const page = await pdf.getPage(1);
+      console.log('PDF 第一页获取成功');
       
       const scale = 1.5;
       const viewport = page.getViewport({ scale });
@@ -90,10 +100,17 @@ export class SignatureTool {
       canvas.height = viewport.height;
       
       const context = canvas.getContext('2d');
-      await page.render({
+      
+      // 渲染 PDF 页面
+      const renderContext = {
         canvasContext: context,
-        viewport: viewport
-      }).promise;
+        viewport: viewport,
+        enableWebGL: true
+      };
+      
+      console.log('开始渲染 PDF');
+      await page.render(renderContext).promise;
+      console.log('PDF 渲染完成');
       
       // 显示预览
       const previewContainer = document.getElementById('previewContainer');
@@ -106,7 +123,8 @@ export class SignatureTool {
       return Promise.resolve();
     } catch (error) {
       console.error('PDF 加载失败:', error);
-      throw new Error('PDF 加载失败，请重试');
+      // 添加更详细的错误信息
+      throw new Error(`PDF 加载失败: ${error.message || '未知错误'}`);
     }
   }
 
