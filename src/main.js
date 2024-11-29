@@ -97,6 +97,8 @@ class App {
 
   async handleDocumentUpload(event) {
     const file = event.target.files[0];
+    console.log('选择的文件:', file);
+    
     if (file && this.signatureTool) {
       const loading = document.createElement('div');
       loading.className = 'loading';
@@ -107,7 +109,9 @@ class App {
         if (file.size > 10 * 1024 * 1024) {
           throw new Error('文件大小不能超过10MB');
         }
+        console.log('开始处理文件');
         await this.signatureTool.loadDocument(file);
+        console.log('文件处理完成');
       } catch (error) {
         console.error('加载文档失败:', error);
         alert(error.message || '加载文档失败，请重试');
@@ -115,7 +119,7 @@ class App {
         loading.remove();
       }
     } else {
-      console.error('SignatureTool not initialized or no file selected');
+      console.error('SignatureTool未初始化或未选择文件');
     }
   }
 

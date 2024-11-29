@@ -68,84 +68,112 @@ export class SignatureTool {
 
   // 添加预览功能
   async loadDocument(file) {
-    if (file.type === 'application/pdf') {
-      return this.loadPDF(file);
-    } else {
-      return this.loadImage(file);
+    console.log('开始处理文件:', file.type);
+    try {
+      if (file.type === 'application/pdf') {
+        console.log('检测到PDF文件');
+        return this.loadPDF(file);
+      } else if (file.type.startsWith('image/')) {
+        console.log('检测到图片文件');
+        return this.loadImage(file);
+      } else {
+        throw new Error('不支持的文件类型');
+      }
+    } catch (error) {
+      console.error('文件处理错误:', error);
+      throw error;
     }
   }
 
   async loadPDF(file) {
     try {
+      console.log('开始读取PDF文件');
       const arrayBuffer = await file.arrayBuffer();
+      console.log('PDF文件读取完成，大小:', arrayBuffer.byteLength);
       
-      // 添加更多错误处理和日志
-      console.log('开始加载 PDF');
-      const loadingTask = pdfjsLib.getDocument({data: arrayBuffer});
-      console.log('PDF 加载任务创建成功');
+      const loadingTask = pdfjsLib.getDocument({
+        data: arrayBuffer,
+        verbosity: pdfjsLib.VerbosityLevel.ERRORS
+      });
+      console.log('PDF加载任务创建成功');
       
       const pdf = await loadingTask.promise;
-      console.log('PDF 文档加载成功');
+      console.log('PDF文档加载成功，页数:', pdf.numPages);
       
       const page = await pdf.getPage(1);
-      console.log('PDF 第一页获取成功');
+      console.log('获取第一页成功');
       
       const scale = 1.5;
       const viewport = page.getViewport({ scale });
       
-      // 创建 canvas 用于渲染 PDF
       const canvas = document.createElement('canvas');
       canvas.width = viewport.width;
       canvas.height = viewport.height;
+      console.log('Canvas创建成功，尺寸:', canvas.width, 'x', canvas.height);
       
       const context = canvas.getContext('2d');
       
-      // 渲染 PDF 页面
       const renderContext = {
         canvasContext: context,
         viewport: viewport,
         enableWebGL: true
       };
       
-      console.log('开始渲染 PDF');
+      console.log('开始渲染PDF页面');
       await page.render(renderContext).promise;
-      console.log('PDF 渲染完成');
+      console.log('PDF渲染完成');
       
-      // 显示预览
       const previewContainer = document.getElementById('previewContainer');
+      if (!previewContainer) {
+        throw new Error('预览容器不存在');
+      }
       previewContainer.innerHTML = '';
       previewContainer.appendChild(canvas);
+      console.log('预览更新成功');
       
-      // 保存文档信息
       this.documentImage = new fabric.Image(canvas);
+      console.log('文档图像保存成功');
       
       return Promise.resolve();
     } catch (error) {
-      console.error('PDF 加载失败:', error);
-      // 添加更详细的错误信息
-      throw new Error(`PDF 加载失败: ${error.message || '未知错误'}`);
+      console.error('PDF处理失败:', error);
+      throw new Error(`PDF处理失败: ${error.message}`);
     }
   }
 
   async loadImage(file) {
+    console.log('开始处理图片文件');
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
+      
       reader.onload = (e) => {
+        console.log('图片文件读取完成');
         fabric.Image.fromURL(e.target.result, (img) => {
+          console.log('图片转换成功');
           this.documentImage = img;
           
-          // 在预览区域显示文档
           const previewContainer = document.getElementById('previewContainer');
+          if (!previewContainer) {
+            reject(new Error('预览容器不存在'));
+            return;
+          }
+          
           const preview = document.createElement('img');
           preview.src = e.target.result;
           preview.style.maxWidth = '100%';
           previewContainer.innerHTML = '';
           previewContainer.appendChild(preview);
+          console.log('预览更新成功');
           
           resolve();
         });
       };
-      reader.onerror = reject;
+      
+      reader.onerror = (error) => {
+        console.error('图片读取失败:', error);
+        reject(error);
+      };
+      
       reader.readAsDataURL(file);
     });
   }
